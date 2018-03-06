@@ -375,7 +375,7 @@ xelemWithText :: Name -> TextContent -> Xml Elem
 xelemWithText n t = xelem n (xtext t)
 
 instance Semigroup (Xml Elem) where
-    mappend x1 x2 = Xml $
+    x1 <> x2 = Xml $
         do env <- ask
            let (Elem b1, env') = runXml env x1
                (Elem b2, env'') = runXml env' x2
