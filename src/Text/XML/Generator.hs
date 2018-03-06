@@ -278,13 +278,15 @@ xattrs = M.mconcat
 noAttrs :: Xml Attr
 noAttrs = xempty
 
-instance Monoid (Xml Attr) where
-    mempty = noAttrs
-    mappend x1 x2 = Xml $
+instance Semigroup (Xml Attr) where
+    x1 <> x2 = Xml $
         do env <- ask
            let (Attr b1, env') = runXml env x1
            let (Attr b2, env'') = runXml env' x2
            return $ (Attr $ b1 `mappend` b2, env'')
+         
+instance Monoid (Xml Attr) where
+    mempty = noAttrs
 
 --
 -- Elements
@@ -372,13 +374,15 @@ noElems = xempty
 xelemWithText :: Name -> TextContent -> Xml Elem
 xelemWithText n t = xelem n (xtext t)
 
-instance Monoid (Xml Elem) where
-    mempty = noElems
+instance Semigroup (Xml Elem) where
     mappend x1 x2 = Xml $
         do env <- ask
            let (Elem b1, env') = runXml env x1
                (Elem b2, env'') = runXml env' x2
            return (Elem $ b1 `mappend` b2, env'')
+           
+instance Monoid (Xml Elem) where
+    mempty = noElems
 
 --
 -- Other XML constructs
